@@ -16,16 +16,17 @@ import android.webkit.WebViewClient;
 public class MainActivity extends AppCompatActivity {
     private String URL;
     private SharedPreferences sharedPreferences;
-    private WebView mWebView;
+    private Utils mUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initialize();
+        mUtils = new Utils(this);
+        mUtils.initialize();
 
-        sharedPreferences = getBaseContext().getSharedPreferences("com.example.kiosk.PREFS", MODE_PRIVATE);
+        sharedPreferences = getBaseContext().getSharedPreferences("ph.cleverqms.caller.PREFS", MODE_PRIVATE);
 
         String apiUrl = sharedPreferences.getString("apiUrl", getResources().getString(R.string.url_default));
         String ui = sharedPreferences.getString("ui", getResources().getString(R.string.ui_default));
@@ -37,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         if (getIsFirstStart()) {
             startActivity(new Intent(MainActivity.this, ConfigActivity.class));
         } else {
-            Log.e("PREFS", sharedPreferences.getAll().toString());
             setUpWebView();
         }
     }
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        setUpWebView();
+        mUtils.initialize();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpWebView() {
-        mWebView = findViewById(R.id.activity_main_webview);
+        WebView mWebView = findViewById(R.id.activity_main_webview);
 
         mWebView.setWebChromeClient(new WebChromeClient());
         mWebView.setWebViewClient(new WebViewClient());
@@ -67,33 +67,7 @@ public class MainActivity extends AppCompatActivity {
         mWebSettings.setJavaScriptEnabled(true);
         mWebSettings.setDisplayZoomControls(false);
         mWebSettings.setBuiltInZoomControls(false);
-//        mWebSettings.setAppCacheEnabled(false);
-//        mWebSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         mWebView.loadUrl(URL);
-    }
-
-    private void initialize() {
-//        Sentry.init("https://f77b18f2b95b4bc58046a4755b3a5b21@sentry.io/1955488", new AndroidSentryClientFactory(this));
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        hideSystemUI();
-    }
-
-    private void hideSystemUI() {
-        // Enables regular immersive mode.
-        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
-        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        // Set the content to appear under the system bars so that the
-                        // content doesn't resize when the system bars hide and show.
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        // Hide the nav bar and status bar
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 }
