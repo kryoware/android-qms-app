@@ -48,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
         setUpWebView();
     }
 
+    @Override
+    public void onBackPressed() {
+    }
+
     private boolean getIsFirstStart() {
         return sharedPreferences.getBoolean("isFirstStart", true);
     }
@@ -60,11 +64,11 @@ public class MainActivity extends AppCompatActivity {
 
         WebSettings mWebSettings = mWebView.getSettings();
 
-        mWebSettings.setDisplayZoomControls((false));
         mWebSettings.setJavaScriptEnabled(true);
+        mWebSettings.setDisplayZoomControls(false);
         mWebSettings.setBuiltInZoomControls(false);
-        mWebSettings.setAppCacheEnabled(false);
-        mWebSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+//        mWebSettings.setAppCacheEnabled(false);
+//        mWebSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         mWebView.loadUrl(URL);
     }

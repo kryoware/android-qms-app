@@ -102,7 +102,7 @@ public class ConfigActivity extends AppCompatActivity {
                         ui = _ui;
                     }
 
-                    if (apiUrl.isEmpty() && apiKey.isEmpty() && apiVer.isEmpty() && ui.isEmpty()) {
+                    if (apiUrl.isEmpty() || apiKey.isEmpty() || apiVer.isEmpty() || ui.isEmpty()) {
                         Toast.makeText(getApplicationContext(), "Invalid config", Toast.LENGTH_LONG).show();
                     } else {
                         configSaveBtn.setEnabled(false);
